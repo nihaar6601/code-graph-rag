@@ -1,0 +1,41 @@
+# Python environments and bytecode
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+
+# Secrets and local environment configuration
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+
+# Generated graphs, retrieval results, and downloaded model caches
+/graph.json
+/output/
+.cache/
+
+# Test, analysis, and packaging artifacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+build/
+dist/
+*.egg-info/
+
+# Local editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+._*
+*.swp
+*.swo
+*~
+*.log

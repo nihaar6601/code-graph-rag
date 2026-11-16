@@ -1,0 +1,7 @@
+tree-sitter==0.26.0
+tree-sitter-java==0.23.5
+networkx>=3.2,<4
+tiktoken>=0.8,<1
+numpy>=1.26,<3
+sentence-transformers>=3,<6
+certifi>=2024.8.30

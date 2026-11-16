@@ -1,0 +1,18 @@
+[
+  {
+    "question": "How does payment processing work?",
+    "expected": ["demo.service.PaymentService.processPayment()", "demo.service.PaymentService.validatePayment()"]
+  },
+  {
+    "question": "What does the controller invoke?",
+    "expected": ["demo.app.PaymentController.process(PaymentService)", "demo.service.PaymentService.processPayment()", "demo.service.PaymentService.validatePayment()", "demo.util.Audit.record()"]
+  },
+  {
+    "question": "Show only the processPayment implementation",
+    "expected": ["demo.service.PaymentService.processPayment()"]
+  },
+  {
+    "question": "Where is the audit record method?",
+    "expected": ["demo.util.Audit.record()"]
+  }
+]

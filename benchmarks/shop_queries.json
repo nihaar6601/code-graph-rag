@@ -1,0 +1,281 @@
+[
+  {
+    "question": "Where is the OrderController class declared?",
+    "category": "lookup",
+    "expected": [
+      "shop.controller.OrderController"
+    ]
+  },
+  {
+    "question": "Find the class responsible for storing order records.",
+    "category": "lookup",
+    "expected": [
+      "shop.repository.OrderRepository"
+    ]
+  },
+  {
+    "question": "Locate the method that retrieves a shipment tracking code.",
+    "category": "lookup",
+    "expected": [
+      "shop.service.ShippingService.tracking(String)"
+    ]
+  },
+  {
+    "question": "Which function returns the most recent audit event?",
+    "category": "lookup",
+    "expected": [
+      "shop.util.AuditLog.lastEvent()"
+    ]
+  },
+  {
+    "question": "Find the available stock query for a SKU.",
+    "category": "lookup",
+    "expected": [
+      "shop.service.InventoryService.available(String)"
+    ]
+  },
+  {
+    "question": "Show only the checkout implementation, without its dependencies.",
+    "category": "implementation_only",
+    "expected": [
+      "shop.service.OrderService.checkout(String,int,int,String,String)"
+    ]
+  },
+  {
+    "question": "Give me just the code for refunding a payment.",
+    "category": "implementation_only",
+    "expected": [
+      "shop.service.PaymentService.refund(int)"
+    ]
+  },
+  {
+    "question": "Display only the SAVE10 discount calculation method.",
+    "category": "implementation_only",
+    "expected": [
+      "shop.util.PriceCalculator.discount(int,String)"
+    ]
+  },
+  {
+    "question": "Only show the controller endpoint that cancels an order.",
+    "category": "implementation_only",
+    "expected": [
+      "shop.controller.OrderController.cancelOrder(String,String,int,int)"
+    ]
+  },
+  {
+    "question": "Which methods does the merchandise total calculator call directly?",
+    "category": "dependency",
+    "expected": [
+      "shop.util.PriceCalculator.total(int,int,String)",
+      "shop.util.PriceCalculator.subtotal(int,int)",
+      "shop.util.PriceCalculator.discount(int,String)"
+    ]
+  },
+  {
+    "question": "Trace inventory reservation to its direct stock repository calls.",
+    "category": "dependency",
+    "expected": [
+      "shop.service.InventoryService.reserve(String,int)",
+      "shop.repository.StockRepository.quantity(String)",
+      "shop.repository.StockRepository.reduce(String,int)"
+    ]
+  },
+  {
+    "question": "What is the direct delegation path for querying order status from the controller through storage?",
+    "category": "dependency",
+    "expected": [
+      "shop.controller.OrderController.orderStatus(String)",
+      "shop.service.OrderService.status(String)",
+      "shop.repository.OrderRepository.status(String)"
+    ]
+  },
+  {
+    "question": "Follow a stock release through to the repository and its quantity lookup.",
+    "category": "dependency",
+    "expected": [
+      "shop.service.InventoryService.release(String,int)",
+      "shop.repository.StockRepository.restore(String,int)",
+      "shop.repository.StockRepository.quantity(String)"
+    ]
+  },
+  {
+    "question": "What method does the place-order controller call directly?",
+    "category": "dependency",
+    "expected": [
+      "shop.controller.OrderController.placeOrder(String,int,int,String,String)",
+      "shop.service.OrderService.checkout(String,int,int,String,String)"
+    ]
+  },
+  {
+    "question": "How is reserved stock returned when a checkout payment is rejected?",
+    "category": "behavior",
+    "expected": [
+      "shop.service.OrderService.checkout(String,int,int,String,String)",
+      "shop.service.PaymentService.charge(int)",
+      "shop.service.InventoryService.release(String,int)"
+    ]
+  },
+  {
+    "question": "Why does a reservation reject zero units or insufficient stock?",
+    "category": "behavior",
+    "expected": [
+      "shop.service.InventoryService.reserve(String,int)",
+      "shop.repository.StockRepository.quantity(String)",
+      "shop.repository.StockRepository.reduce(String,int)"
+    ]
+  },
+  {
+    "question": "How does the coupon SAVE10 change the merchandise total, including rounding?",
+    "category": "behavior",
+    "expected": [
+      "shop.util.PriceCalculator.total(int,int,String)",
+      "shop.util.PriceCalculator.subtotal(int,int)",
+      "shop.util.PriceCalculator.discount(int,String)"
+    ]
+  },
+  {
+    "question": "What prevents refunds larger than the ledger balance?",
+    "category": "behavior",
+    "expected": [
+      "shop.service.PaymentService.refund(int)"
+    ]
+  },
+  {
+    "question": "What delivery fee is chosen for LOCAL versus other zones?",
+    "category": "behavior",
+    "expected": [
+      "shop.service.ShippingService.quote(String)"
+    ]
+  },
+  {
+    "question": "Which class coordinates inventory, charging, shipping and order storage?",
+    "category": "responsibility",
+    "expected": [
+      "shop.service.OrderService"
+    ]
+  },
+  {
+    "question": "Which class owns the simulated payment balance?",
+    "category": "responsibility",
+    "expected": [
+      "shop.service.PaymentService"
+    ]
+  },
+  {
+    "question": "Where are in-memory stock counts maintained?",
+    "category": "responsibility",
+    "expected": [
+      "shop.repository.StockRepository"
+    ]
+  },
+  {
+    "question": "Which class keeps the per-instance activity history?",
+    "category": "responsibility",
+    "expected": [
+      "shop.util.AuditLog"
+    ]
+  },
+  {
+    "question": "Show status handling across all layers that expose an order status query.",
+    "category": "ambiguous",
+    "expected": [
+      "shop.controller.OrderController.orderStatus(String)",
+      "shop.service.OrderService.status(String)",
+      "shop.repository.OrderRepository.status(String)"
+    ]
+  },
+  {
+    "question": "Where are totals calculated or reported: merchandise due and the running charged balance?",
+    "category": "ambiguous",
+    "expected": [
+      "shop.util.PriceCalculator.total(int,int,String)",
+      "shop.service.PaymentService.totalCharged()"
+    ]
+  },
+  {
+    "question": "Where does the fixture record and inspect audit events?",
+    "category": "ambiguous",
+    "expected": [
+      "shop.util.AuditLog.record(String)",
+      "shop.util.AuditLog.count()",
+      "shop.util.AuditLog.lastEvent()"
+    ]
+  },
+  {
+    "question": "Where do stock quantities get read at the service and storage layers?",
+    "category": "ambiguous",
+    "expected": [
+      "shop.service.InventoryService.available(String)",
+      "shop.repository.StockRepository.quantity(String)"
+    ]
+  },
+  {
+    "question": "Show the cancellation coordinator and its refund, restocking, status update and audit operations.",
+    "category": "multi_method",
+    "expected": [
+      "shop.service.OrderService.cancel(String,String,int,int)",
+      "shop.service.PaymentService.refund(int)",
+      "shop.service.InventoryService.release(String,int)",
+      "shop.repository.OrderRepository.updateStatus(String,String)",
+      "shop.util.AuditLog.record(String)"
+    ]
+  },
+  {
+    "question": "Show checkout together with the inventory reservation, price calculation, payment charge and dispatch entry points.",
+    "category": "multi_method",
+    "expected": [
+      "shop.service.OrderService.checkout(String,int,int,String,String)",
+      "shop.service.InventoryService.reserve(String,int)",
+      "shop.util.PriceCalculator.total(int,int,String)",
+      "shop.service.PaymentService.charge(int)",
+      "shop.service.ShippingService.dispatch(String,String)"
+    ]
+  },
+  {
+    "question": "Compare payment acceptance, refund validation and the net charged balance accessor.",
+    "category": "multi_method",
+    "expected": [
+      "shop.service.PaymentService.charge(int)",
+      "shop.service.PaymentService.refund(int)",
+      "shop.service.PaymentService.totalCharged()"
+    ]
+  },
+  {
+    "question": "Show how shipping fees, dispatch codes and tracking lookups are implemented.",
+    "category": "multi_method",
+    "expected": [
+      "shop.service.ShippingService.quote(String)",
+      "shop.service.ShippingService.dispatch(String,String)",
+      "shop.service.ShippingService.tracking(String)"
+    ]
+  },
+  {
+    "question": "Compare creating an order record, reading its status and changing its status.",
+    "category": "multi_method",
+    "expected": [
+      "shop.repository.OrderRepository.save(String,int,int)",
+      "shop.repository.OrderRepository.status(String)",
+      "shop.repository.OrderRepository.updateStatus(String,String)"
+    ]
+  },
+  {
+    "question": "How are OAuth refresh tokens rotated?",
+    "category": "unrelated",
+    "expected": []
+  },
+  {
+    "question": "Where is the PostgreSQL migration runner implemented?",
+    "category": "unrelated",
+    "expected": []
+  },
+  {
+    "question": "Show the neural embedding generation pipeline.",
+    "category": "unrelated",
+    "expected": []
+  },
+  {
+    "question": "How are product images resized and uploaded to cloud storage?",
+    "category": "unrelated",
+    "expected": []
+  }
+]

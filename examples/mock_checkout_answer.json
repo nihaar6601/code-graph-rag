@@ -1,0 +1,18 @@
+{
+  "claims": [
+    {
+      "text": "When payments.charge rejects a checkout payment, OrderService.checkout calls inventory.release(sku, quantity) and returns PAYMENT_FAILED before saving or dispatching the order.",
+      "citations": [{"source_id": "S1", "start_line": 22, "end_line": 29}]
+    },
+    {
+      "text": "PaymentService.charge returns false for a nonpositive amount or an amount over 100000 cents; an accepted amount increases chargedCents.",
+      "citations": [{"source_id": "S2", "start_line": 7, "end_line": 13}]
+    },
+    {
+      "text": "InventoryService.release calls stock.restore only when the quantity is positive.",
+      "citations": [{"source_id": "S3", "start_line": 15, "end_line": 19}]
+    }
+  ],
+  "insufficient_context": false,
+  "uncertainties": []
+}

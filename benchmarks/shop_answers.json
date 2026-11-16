@@ -1,0 +1,1173 @@
+[
+  {
+    "question": "Where is the OrderController class declared?",
+    "category": "lookup",
+    "expected": [
+      "shop.controller.OrderController"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "OrderController is declared in package shop.controller in src/shop/controller/OrderController.java.",
+    "facts": [
+      {
+        "id": "q01_f1",
+        "description": "OrderController is declared in the shop.controller package.",
+        "patterns": [
+          "\\bshop\\.controller(?:\\.OrderController)?\\b",
+          "\\bsrc/shop/controller/OrderController\\.java\\b"
+        ],
+        "sources": [
+          "shop.controller.OrderController"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Find the class responsible for storing order records.",
+    "category": "lookup",
+    "expected": [
+      "shop.repository.OrderRepository"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "shop.repository.OrderRepository stores order details and statuses in per-instance maps.",
+    "facts": [
+      {
+        "id": "q02_f1",
+        "description": "OrderRepository stores order records.",
+        "patterns": [
+          "\\bOrderRepository\\b.{0,100}\\b(stor\\w*|record\\w*|map\\w*)\\b",
+          "\\b(stor\\w*|record\\w*)\\b.{0,100}\\bOrderRepository\\b"
+        ],
+        "sources": [
+          "shop.repository.OrderRepository"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Locate the method that retrieves a shipment tracking code.",
+    "category": "lookup",
+    "expected": [
+      "shop.service.ShippingService.tracking(String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "ShippingService.tracking(String orderId) returns the stored tracking code, or NOT_DISPATCHED if absent.",
+    "facts": [
+      {
+        "id": "q03_f1",
+        "description": "ShippingService.tracking looks up the tracking code by order ID.",
+        "patterns": [
+          "\\bShippingService\\.tracking\\b",
+          "\\btracking\\s*\\([^)]*\\).{0,100}\\b(code|orderId|order ID)\\b"
+        ],
+        "sources": [
+          "shop.service.ShippingService.tracking(String)"
+        ]
+      },
+      {
+        "id": "q03_f2",
+        "description": "A missing tracking entry returns NOT_DISPATCHED.",
+        "patterns": [
+          "\\b(missing|absent|unknown|default|otherwise|no (?:entry|code|shipment))\\b.{0,100}\\bNOT_DISPATCHED\\b",
+          "\\bNOT_DISPATCHED\\b.{0,100}\\b(missing|absent|unknown|default|no (?:entry|code|shipment))\\b"
+        ],
+        "sources": [
+          "shop.service.ShippingService.tracking(String)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Which function returns the most recent audit event?",
+    "category": "lookup",
+    "expected": [
+      "shop.util.AuditLog.lastEvent()"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "AuditLog.lastEvent() returns the final event in its list, or NO_EVENTS when the list is empty.",
+    "facts": [
+      {
+        "id": "q04_f1",
+        "description": "AuditLog.lastEvent returns the latest event.",
+        "patterns": [
+          "\\blastEvent\\b.{0,100}\\b(last|latest|recent|final)\\b",
+          "\\b(last|latest|recent|final)\\b.{0,100}\\blastEvent\\b"
+        ],
+        "sources": [
+          "shop.util.AuditLog.lastEvent()"
+        ]
+      },
+      {
+        "id": "q04_f2",
+        "description": "Empty event history returns NO_EVENTS.",
+        "patterns": [
+          "\\b(empty|no events|default)\\b.{0,80}\\bNO_EVENTS\\b",
+          "\\bNO_EVENTS\\b.{0,80}\\b(empty|no events)\\b"
+        ],
+        "sources": [
+          "shop.util.AuditLog.lastEvent()"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Find the available stock query for a SKU.",
+    "category": "lookup",
+    "expected": [
+      "shop.service.InventoryService.available(String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "InventoryService.available(String sku) returns stock.quantity(sku).",
+    "facts": [
+      {
+        "id": "q05_f1",
+        "description": "InventoryService.available delegates the SKU lookup to stock.quantity.",
+        "patterns": [
+          "\\bavailable\\b.{0,100}\\b(?:stock\\.)?quantity\\s*\\(",
+          "\\bavailable\\b.{0,100}\\b(delegates|returns|queries)\\b.{0,60}\\b(stock|quantity)\\b"
+        ],
+        "sources": [
+          "shop.service.InventoryService.available(String)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Show only the checkout implementation, without its dependencies.",
+    "category": "implementation_only",
+    "expected": [
+      "shop.service.OrderService.checkout(String,int,int,String,String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "OrderService.checkout rejects negative unit prices or failed reservation with REJECTED. It calculates merchandise plus delivery and charges that amount. A failed charge releases stock and returns PAYMENT_FAILED. Success saves the order, dispatches it, records PLACED, and returns the order ID.",
+    "facts": [
+      {
+        "id": "q06_f1",
+        "description": "Negative unit price or failed reservation produces REJECTED.",
+        "patterns": [
+          "\\b(negative|less than zero|<\\s*0)\\b.{0,120}\\bREJECTED\\b",
+          "\\b(reservation fails|failed reservation|cannot reserve|reserve\\([^)]*\\))\\b.{0,100}\\bREJECTED\\b"
+        ],
+        "sources": [
+          "shop.service.OrderService.checkout(String,int,int,String,String)"
+        ]
+      },
+      {
+        "id": "q06_f2",
+        "description": "The charge combines merchandise and delivery.",
+        "patterns": [
+          "\\b(merchandise|total)\\b.{0,100}(?:\\+|plus|and|added to).{0,50}\\b(delivery|shipping)\\b"
+        ],
+        "sources": [
+          "shop.service.OrderService.checkout(String,int,int,String,String)"
+        ]
+      },
+      {
+        "id": "q06_f3",
+        "description": "Failed payment releases reserved inventory and returns PAYMENT_FAILED.",
+        "patterns": [
+          "\\b(fail\\w*|reject\\w*|unsuccessful)\\b.{0,120}\\b(release\\w*|restor\\w*|return\\w* stock)\\b.{0,120}\\bPAYMENT_FAILED\\b",
+          "\\bPAYMENT_FAILED\\b.{0,120}\\b(release\\w*|restor\\w*)\\b"
+        ],
+        "sources": [
+          "shop.service.OrderService.checkout(String,int,int,String,String)"
+        ]
+      },
+      {
+        "id": "q06_f4",
+        "description": "Successful checkout saves, dispatches and audits the order.",
+        "patterns": [
+          "\\bsav\\w*\\b.{0,100}\\bdispatch\\w*\\b.{0,100}\\b(audit\\w*|record\\w*|PLACED)\\b"
+        ],
+        "sources": [
+          "shop.service.OrderService.checkout(String,int,int,String,String)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Give me just the code for refunding a payment.",
+    "category": "implementation_only",
+    "expected": [
+      "shop.service.PaymentService.refund(int)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "PaymentService.refund rejects amounts at or below zero or above chargedCents. Otherwise it subtracts the amount from chargedCents and returns true.",
+    "facts": [
+      {
+        "id": "q07_f1",
+        "description": "Refund rejects nonpositive amounts and amounts above the balance.",
+        "patterns": [
+          "\\b(reject\\w*|false)\\b.{0,120}\\b(nonpositive|non-positive|<=\\s*0|zero or negative)\\b.{0,120}\\b(balance|chargedCents)\\b",
+          "amountCents\\s*<=\\s*0\\s*\\|\\|\\s*amountCents\\s*>\\s*chargedCents",
+          "\\brefund\\b.{0,100}\\b(reject\\w*|false)\\b.{0,80}\\b(at or below zero|zero or negative|nonpositive|non-positive)\\b.{0,100}\\b(above|exceed\\w*|greater than)\\b.{0,60}\\b(chargedCents|balance)\\b"
+        ],
+        "sources": [
+          "shop.service.PaymentService.refund(int)"
+        ]
+      },
+      {
+        "id": "q07_f2",
+        "description": "Accepted refunds subtract from chargedCents.",
+        "patterns": [
+          "chargedCents\\s*-=\\s*amountCents",
+          "\\b(subtract\\w*|reduc\\w*|deduct\\w*)\\b.{0,90}\\b(balance|chargedCents)\\b"
+        ],
+        "sources": [
+          "shop.service.PaymentService.refund(int)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Display only the SAVE10 discount calculation method.",
+    "category": "implementation_only",
+    "expected": [
+      "shop.util.PriceCalculator.discount(int,String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "PriceCalculator.discount returns subtotalCents / 10 for exactly SAVE10, using integer division; other coupons return zero.",
+    "facts": [
+      {
+        "id": "q08_f1",
+        "description": "SAVE10 yields subtotalCents divided by ten.",
+        "patterns": [
+          "\\bSAVE10\\b.{0,100}(?:/\\s*10|divid\\w* by (?:10|ten)|10\\s*%|ten percent)",
+          "(?:subtotalCents\\s*/\\s*10|subtotal\\s*/\\s*10).{0,80}\\bSAVE10\\b"
+        ],
+        "sources": [
+          "shop.util.PriceCalculator.discount(int,String)"
+        ]
+      },
+      {
+        "id": "q08_f2",
+        "description": "Other coupons return zero discount.",
+        "patterns": [
+          "\\b(other|unrecognized|unmatched|otherwise)\\b.{0,90}\\b(0|zero)\\b"
+        ],
+        "sources": [
+          "shop.util.PriceCalculator.discount(int,String)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Only show the controller endpoint that cancels an order.",
+    "category": "implementation_only",
+    "expected": [
+      "shop.controller.OrderController.cancelOrder(String,String,int,int)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "OrderController.cancelOrder forwards orderId, sku, quantity and paidCents to orders.cancel and returns its boolean result.",
+    "facts": [
+      {
+        "id": "q09_f1",
+        "description": "cancelOrder directly delegates to orders.cancel.",
+        "patterns": [
+          "\\bcancelOrder\\b.{0,120}\\b(?:orders|OrderService)\\.cancel\\b",
+          "return\\s+orders\\.cancel\\s*\\("
+        ],
+        "sources": [
+          "shop.controller.OrderController.cancelOrder(String,String,int,int)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Which methods does the merchandise total calculator call directly?",
+    "category": "dependency",
+    "expected": [
+      "shop.util.PriceCalculator.total(int,int,String)",
+      "shop.util.PriceCalculator.subtotal(int,int)",
+      "shop.util.PriceCalculator.discount(int,String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "PriceCalculator.total directly calls PriceCalculator.subtotal and PriceCalculator.discount, then returns subtotal minus discount.",
+    "facts": [
+      {
+        "id": "q10_f1",
+        "description": "total calls subtotal.",
+        "patterns": [
+          "\\btotal\\b.{0,120}\\bsubtotal\\b",
+          "PriceCalculator\\.subtotal\\s*\\("
+        ],
+        "sources": [
+          "shop.util.PriceCalculator.total(int,int,String)"
+        ]
+      },
+      {
+        "id": "q10_f2",
+        "description": "total calls discount and subtracts its result from the base.",
+        "patterns": [
+          "\\b(subtract\\w*|minus)\\b.{0,70}\\bdiscount\\b",
+          "baseCents\\s*-\\s*PriceCalculator\\.discount"
+        ],
+        "sources": [
+          "shop.util.PriceCalculator.total(int,int,String)",
+          "shop.util.PriceCalculator.discount(int,String)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Trace inventory reservation to its direct stock repository calls.",
+    "category": "dependency",
+    "expected": [
+      "shop.service.InventoryService.reserve(String,int)",
+      "shop.repository.StockRepository.quantity(String)",
+      "shop.repository.StockRepository.reduce(String,int)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "InventoryService.reserve checks stock.quantity(sku) and rejects nonpositive or insufficient quantities. If those checks pass it returns stock.reduce(sku, quantity).",
+    "facts": [
+      {
+        "id": "q11_f1",
+        "description": "reserve checks stock.quantity for availability.",
+        "patterns": [
+          "\\breserve\\b.{0,120}\\b(?:stock\\.)?quantity\\s*\\(",
+          "\\b(check\\w*|read\\w*|quer\\w*)\\b.{0,70}\\bstock\\.quantity\\b"
+        ],
+        "sources": [
+          "shop.service.InventoryService.reserve(String,int)"
+        ]
+      },
+      {
+        "id": "q11_f2",
+        "description": "A valid reservation delegates to stock.reduce.",
+        "patterns": [
+          "\\b(?:stock|StockRepository)\\.reduce\\s*\\(",
+          "\\breserve\\b.{0,100}\\breduce\\b"
+        ],
+        "sources": [
+          "shop.service.InventoryService.reserve(String,int)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "What is the direct delegation path for querying order status from the controller through storage?",
+    "category": "dependency",
+    "expected": [
+      "shop.controller.OrderController.orderStatus(String)",
+      "shop.service.OrderService.status(String)",
+      "shop.repository.OrderRepository.status(String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "OrderController.orderStatus calls OrderService.status, which calls OrderRepository.status; the repository returns the stored status or NOT_FOUND for an unknown order.",
+    "facts": [
+      {
+        "id": "q12_f1",
+        "description": "Controller orderStatus delegates to OrderService.status.",
+        "patterns": [
+          "\\b(?:OrderController\\.)?orderStatus\\b.{0,100}\\b(?:OrderService|orders)\\.status\\b"
+        ],
+        "sources": [
+          "shop.controller.OrderController.orderStatus(String)"
+        ]
+      },
+      {
+        "id": "q12_f2",
+        "description": "OrderService.status delegates to OrderRepository.status.",
+        "patterns": [
+          "\\bOrderService\\.status\\b.{0,100}\\bOrderRepository\\.status\\b",
+          "\\bservice\\b.{0,70}\\b(delegates|forwards|calls)\\b.{0,70}\\brepository\\b"
+        ],
+        "sources": [
+          "shop.service.OrderService.status(String)"
+        ]
+      },
+      {
+        "id": "q12_f3",
+        "description": "Repository status returns NOT_FOUND for an unknown order.",
+        "patterns": [
+          "\\b(unknown|missing|absent|default)\\b.{0,80}\\bNOT_FOUND\\b",
+          "\\bNOT_FOUND\\b.{0,80}\\b(unknown|missing|absent|default)\\b"
+        ],
+        "sources": [
+          "shop.repository.OrderRepository.status(String)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Follow a stock release through to the repository and its quantity lookup.",
+    "category": "dependency",
+    "expected": [
+      "shop.service.InventoryService.release(String,int)",
+      "shop.repository.StockRepository.restore(String,int)",
+      "shop.repository.StockRepository.quantity(String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "InventoryService.release calls stock.restore only for positive quantities. StockRepository.restore reads the current quantity using this.quantity and adds the returned units.",
+    "facts": [
+      {
+        "id": "q13_f1",
+        "description": "release invokes restore only for positive quantities.",
+        "patterns": [
+          "\\brelease\\b.{0,110}\\brestore\\b.{0,90}\\bpositive\\b",
+          "\\bpositive\\b.{0,100}\\b(?:stock\\.)?restore\\b",
+          "quantity\\s*>\\s*0.{0,90}stock\\.restore"
+        ],
+        "sources": [
+          "shop.service.InventoryService.release(String,int)"
+        ]
+      },
+      {
+        "id": "q13_f2",
+        "description": "restore reads quantity and adds units to it.",
+        "patterns": [
+          "\\brestore\\b.{0,120}\\bquantity\\b.{0,100}\\b(add\\w*|plus)\\b",
+          "current\\s*\\+\\s*units",
+          "\\breads?\\b.{0,80}\\bquantity\\b.{0,80}\\badds?\\b"
+        ],
+        "sources": [
+          "shop.repository.StockRepository.restore(String,int)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "What method does the place-order controller call directly?",
+    "category": "dependency",
+    "expected": [
+      "shop.controller.OrderController.placeOrder(String,int,int,String,String)",
+      "shop.service.OrderService.checkout(String,int,int,String,String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "OrderController.placeOrder directly returns orders.checkout(sku, quantity, unitPriceCents, coupon, zone).",
+    "facts": [
+      {
+        "id": "q14_f1",
+        "description": "placeOrder calls OrderService.checkout directly.",
+        "patterns": [
+          "\\bplaceOrder\\b.{0,120}\\b(?:orders|OrderService)\\.checkout\\b",
+          "return\\s+orders\\.checkout\\s*\\("
+        ],
+        "sources": [
+          "shop.controller.OrderController.placeOrder(String,int,int,String,String)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "How is reserved stock returned when a checkout payment is rejected?",
+    "category": "behavior",
+    "expected": [
+      "shop.service.OrderService.checkout(String,int,int,String,String)",
+      "shop.service.PaymentService.charge(int)",
+      "shop.service.InventoryService.release(String,int)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "When payments.charge fails, checkout calls inventory.release(sku, quantity) before returning PAYMENT_FAILED. release restores positive quantities through stock.restore. charge rejects nonpositive amounts or amounts above 100000 cents.",
+    "facts": [
+      {
+        "id": "q15_f1",
+        "description": "Failed charge causes checkout to release reserved stock.",
+        "patterns": [
+          "\\b(fail\\w*|reject\\w*)\\b.{0,120}\\b(?:inventory\\.release|release\\w* (?:the )?(?:reserved )?stock|restor\\w* (?:the )?(?:reserved )?stock)\\b"
+        ],
+        "sources": [
+          "shop.service.OrderService.checkout(String,int,int,String,String)"
+        ]
+      },
+      {
+        "id": "q15_f2",
+        "description": "The failed-payment branch returns PAYMENT_FAILED.",
+        "patterns": [
+          "\\b(return\\w*|result|status)\\b.{0,60}\\bPAYMENT_FAILED\\b"
+        ],
+        "sources": [
+          "shop.service.OrderService.checkout(String,int,int,String,String)"
+        ]
+      },
+      {
+        "id": "q15_f3",
+        "description": "release restores positive quantities.",
+        "patterns": [
+          "\\brelease\\b.{0,100}\\b(restor\\w*|stock\\.restore)\\b",
+          "\\bpositive\\b.{0,90}\\bstock\\.restore\\b"
+        ],
+        "sources": [
+          "shop.service.InventoryService.release(String,int)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Why does a reservation reject zero units or insufficient stock?",
+    "category": "behavior",
+    "expected": [
+      "shop.service.InventoryService.reserve(String,int)",
+      "shop.repository.StockRepository.quantity(String)",
+      "shop.repository.StockRepository.reduce(String,int)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "reserve returns false for quantity <= 0 or stock.quantity(sku) below the requested quantity. Only valid requests reach stock.reduce, which also rejects nonpositive or excessive units. Unseen SKUs have 20 demonstration units.",
+    "facts": [
+      {
+        "id": "q16_f1",
+        "description": "Nonpositive requested quantities fail reservation.",
+        "patterns": [
+          "\\b(zero|nonpositive|non-positive|<=\\s*0)\\b.{0,100}\\b(reject\\w*|false|fail\\w*)\\b",
+          "\\b(reject\\w*|false|fail\\w*)\\b.{0,100}\\b(zero|nonpositive|non-positive)\\b"
+        ],
+        "sources": [
+          "shop.service.InventoryService.reserve(String,int)"
+        ]
+      },
+      {
+        "id": "q16_f2",
+        "description": "Requests exceeding available stock are rejected.",
+        "patterns": [
+          "\\b(insufficient|exceed\\w*|more than|below the requested)\\b.{0,110}\\b(reject\\w*|false|fail\\w*)\\b",
+          "\\b(reject\\w*|false|fail\\w*)\\b.{0,110}\\b(insufficient|exceed\\w*)\\b"
+        ],
+        "sources": [
+          "shop.service.InventoryService.reserve(String,int)"
+        ]
+      },
+      {
+        "id": "q16_f3",
+        "description": "Unseen SKU quantity defaults to 20.",
+        "patterns": [
+          "\\b(unseen|unknown|new|default)\\b.{0,100}\\b(20|twenty)\\b"
+        ],
+        "sources": [
+          "shop.repository.StockRepository.quantity(String)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "How does the coupon SAVE10 change the merchandise total, including rounding?",
+    "category": "behavior",
+    "expected": [
+      "shop.util.PriceCalculator.total(int,int,String)",
+      "shop.util.PriceCalculator.subtotal(int,int)",
+      "shop.util.PriceCalculator.discount(int,String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "subtotal multiplies unit price by quantity for valid inputs. SAVE10 discounts subtotal / 10 using integer division, truncating fractional cents, and total subtracts this discount. For 105 cents, the discount is 10 and merchandise due is 95 cents.",
+    "facts": [
+      {
+        "id": "q17_f1",
+        "description": "subtotal multiplies unit price by quantity.",
+        "patterns": [
+          "unitPriceCents\\s*\\*\\s*quantity",
+          "\\b(multipl\\w*|times)\\b.{0,100}\\bquantity\\b"
+        ],
+        "sources": [
+          "shop.util.PriceCalculator.subtotal(int,int)"
+        ]
+      },
+      {
+        "id": "q17_f2",
+        "description": "SAVE10 discount uses integer division by ten and truncates fractional cents.",
+        "patterns": [
+          "\\b(integer division|truncat\\w*|round\\w* down)\\b.{0,110}\\b(discount|cent\\w*|10|ten)\\b",
+          "\\bdiscount\\b.{0,110}\\b(integer division|truncat\\w*|round\\w* down)\\b"
+        ],
+        "sources": [
+          "shop.util.PriceCalculator.discount(int,String)"
+        ]
+      },
+      {
+        "id": "q17_f3",
+        "description": "total subtracts discount from subtotal.",
+        "patterns": [
+          "\\b(subtotal|base)\\b.{0,70}\\b(minus|less)\\b.{0,50}\\bdiscount\\b",
+          "\\bsubtract\\w*\\b.{0,70}\\bdiscount\\b"
+        ],
+        "sources": [
+          "shop.util.PriceCalculator.total(int,int,String)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "What prevents refunds larger than the ledger balance?",
+    "category": "behavior",
+    "expected": [
+      "shop.service.PaymentService.refund(int)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "refund returns false when amountCents exceeds chargedCents, before mutating the balance. It also rejects zero or negative amounts; valid refunds subtract from chargedCents.",
+    "facts": [
+      {
+        "id": "q18_f1",
+        "description": "A refund above chargedCents is rejected.",
+        "patterns": [
+          "\\b(exceed\\w*|above|larger than|greater than)\\b.{0,90}\\b(balance|chargedCents)\\b.{0,100}\\b(reject\\w*|false)\\b",
+          "\\b(reject\\w*|false)\\b.{0,100}\\b(exceed\\w*|above|larger than|greater than)\\b.{0,70}\\b(balance|chargedCents)\\b",
+          "amountCents\\s*>\\s*chargedCents"
+        ],
+        "sources": [
+          "shop.service.PaymentService.refund(int)"
+        ]
+      },
+      {
+        "id": "q18_f2",
+        "description": "Accepted refunds decrease the balance.",
+        "patterns": [
+          "chargedCents\\s*-=\\s*amountCents",
+          "\\b(subtract\\w*|decreas\\w*|reduc\\w*)\\b.{0,90}\\b(balance|chargedCents)\\b"
+        ],
+        "sources": [
+          "shop.service.PaymentService.refund(int)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "What delivery fee is chosen for LOCAL versus other zones?",
+    "category": "behavior",
+    "expected": [
+      "shop.service.ShippingService.quote(String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "ShippingService.quote returns 500 cents for the exact zone LOCAL and 1500 cents for every other value, including null.",
+    "facts": [
+      {
+        "id": "q19_f1",
+        "description": "LOCAL shipping costs 500 cents.",
+        "patterns": [
+          "\\bLOCAL\\b.{0,70}\\b500\\s*(?:cents?)?\\b",
+          "\\b500\\s*cents?\\b.{0,70}\\bLOCAL\\b"
+        ],
+        "sources": [
+          "shop.service.ShippingService.quote(String)"
+        ]
+      },
+      {
+        "id": "q19_f2",
+        "description": "Other zones cost 1500 cents.",
+        "patterns": [
+          "\\b(other|non-local|otherwise|else)\\b.{0,80}\\b1,?500\\b",
+          "\\b1,?500\\b.{0,80}\\b(other|non-local|otherwise)\\b"
+        ],
+        "sources": [
+          "shop.service.ShippingService.quote(String)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Which class coordinates inventory, charging, shipping and order storage?",
+    "category": "responsibility",
+    "expected": [
+      "shop.service.OrderService"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "shop.service.OrderService coordinates InventoryService, PaymentService, ShippingService, OrderRepository and AuditLog for checkout and cancellation.",
+    "facts": [
+      {
+        "id": "q20_f1",
+        "description": "OrderService coordinates inventory, payment, shipping and order storage.",
+        "patterns": [
+          "\\bOrderService\\b.{0,180}\\b(inventory|InventoryService)\\b.{0,100}\\b(payment\\w*|PaymentService|charg\\w*)\\b.{0,100}\\b(shipping|ShippingService)\\b"
+        ],
+        "sources": [
+          "shop.service.OrderService"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Which class owns the simulated payment balance?",
+    "category": "responsibility",
+    "expected": [
+      "shop.service.PaymentService"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "shop.service.PaymentService owns the per-instance chargedCents aggregate ledger. It simulates payment accounting rather than contacting a provider.",
+    "facts": [
+      {
+        "id": "q21_f1",
+        "description": "PaymentService owns the chargedCents simulated ledger.",
+        "patterns": [
+          "\\bPaymentService\\b.{0,120}\\b(chargedCents|ledger|balance)\\b"
+        ],
+        "sources": [
+          "shop.service.PaymentService"
+        ]
+      },
+      {
+        "id": "q21_f2",
+        "description": "Payment accounting is simulated and does not contact a provider.",
+        "patterns": [
+          "\\bsimulat\\w*\\b.{0,80}\\b(payment\\w*|ledger|account\\w*|balance)\\b",
+          "\\b(no|not|never|without)\\b.{0,60}\\b(provider|network|external payment)\\b"
+        ],
+        "sources": [
+          "shop.service.PaymentService"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Where are in-memory stock counts maintained?",
+    "category": "responsibility",
+    "expected": [
+      "shop.repository.StockRepository"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "shop.repository.StockRepository maintains per-instance SKU counts in its quantities map. quantity defaults unseen SKUs to 20 units.",
+    "facts": [
+      {
+        "id": "q22_f1",
+        "description": "StockRepository stores SKU stock in an in-memory quantities map.",
+        "patterns": [
+          "\\bStockRepository\\b.{0,120}\\b(quantities|map|stock counts|SKU counts)\\b"
+        ],
+        "sources": [
+          "shop.repository.StockRepository"
+        ]
+      },
+      {
+        "id": "q22_f2",
+        "description": "Unseen SKUs default to 20 units.",
+        "patterns": [
+          "\\b(unseen|unknown|new|default)\\b.{0,100}\\b(20|twenty)\\b"
+        ],
+        "sources": [
+          "shop.repository.StockRepository"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Which class keeps the per-instance activity history?",
+    "category": "responsibility",
+    "expected": [
+      "shop.util.AuditLog"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "shop.util.AuditLog owns a per-instance list of event strings; it does not persist or send the history externally.",
+    "facts": [
+      {
+        "id": "q23_f1",
+        "description": "AuditLog stores per-instance event history.",
+        "patterns": [
+          "\\bAuditLog\\b.{0,100}\\b(per-instance|instance|list)\\b.{0,80}\\b(event\\w*|history)\\b",
+          "\\bAuditLog\\b.{0,100}\\b(event\\w*|history)\\b.{0,80}\\b(per-instance|instance|list)\\b"
+        ],
+        "sources": [
+          "shop.util.AuditLog"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Show status handling across all layers that expose an order status query.",
+    "category": "ambiguous",
+    "expected": [
+      "shop.controller.OrderController.orderStatus(String)",
+      "shop.service.OrderService.status(String)",
+      "shop.repository.OrderRepository.status(String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "OrderController.orderStatus delegates to OrderService.status, which delegates to OrderRepository.status. Storage returns the saved status, or NOT_FOUND for an unknown order.",
+    "facts": [
+      {
+        "id": "q24_f1",
+        "description": "orderStatus forwards to the service status method.",
+        "patterns": [
+          "\\b(?:OrderController\\.)?orderStatus\\b.{0,100}\\b(?:OrderService|orders)\\.status\\b"
+        ],
+        "sources": [
+          "shop.controller.OrderController.orderStatus(String)"
+        ]
+      },
+      {
+        "id": "q24_f2",
+        "description": "Service status forwards to repository status.",
+        "patterns": [
+          "\\bOrderService\\.status\\b.{0,100}\\bOrderRepository\\.status\\b",
+          "\\bservice\\b.{0,70}\\b(delegates|forwards|calls)\\b.{0,70}\\brepository\\b"
+        ],
+        "sources": [
+          "shop.service.OrderService.status(String)"
+        ]
+      },
+      {
+        "id": "q24_f3",
+        "description": "Unknown orders return NOT_FOUND.",
+        "patterns": [
+          "\\b(unknown|missing|absent|default)\\b.{0,80}\\bNOT_FOUND\\b",
+          "\\bNOT_FOUND\\b.{0,80}\\b(unknown|missing|absent|default)\\b"
+        ],
+        "sources": [
+          "shop.repository.OrderRepository.status(String)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Where are totals calculated or reported: merchandise due and the running charged balance?",
+    "category": "ambiguous",
+    "expected": [
+      "shop.util.PriceCalculator.total(int,int,String)",
+      "shop.service.PaymentService.totalCharged()"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "PriceCalculator.total computes merchandise due as subtotal minus coupon discount. PaymentService.totalCharged returns chargedCents, the aggregate balance after accepted charges and refunds.",
+    "facts": [
+      {
+        "id": "q25_f1",
+        "description": "PriceCalculator.total computes subtotal minus discount.",
+        "patterns": [
+          "\\b(subtotal|base)\\b.{0,70}\\b(minus|less)\\b.{0,60}\\bdiscount\\b",
+          "\\btotal\\b.{0,90}\\bsubtract\\w*\\b.{0,60}\\bdiscount\\b"
+        ],
+        "sources": [
+          "shop.util.PriceCalculator.total(int,int,String)"
+        ]
+      },
+      {
+        "id": "q25_f2",
+        "description": "totalCharged returns the aggregate chargedCents balance.",
+        "patterns": [
+          "\\btotalCharged\\b.{0,100}\\b(chargedCents|balance|aggregate)\\b"
+        ],
+        "sources": [
+          "shop.service.PaymentService.totalCharged()"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Where does the fixture record and inspect audit events?",
+    "category": "ambiguous",
+    "expected": [
+      "shop.util.AuditLog.record(String)",
+      "shop.util.AuditLog.count()",
+      "shop.util.AuditLog.lastEvent()"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "AuditLog.record appends non-null, nonempty strings. count returns the event list size. lastEvent returns the final event or NO_EVENTS for empty history.",
+    "facts": [
+      {
+        "id": "q26_f1",
+        "description": "record appends only non-null, nonempty events.",
+        "patterns": [
+          "\\brecord\\b.{0,120}\\b(non-null|not null)\\b.{0,60}\\b(nonempty|non-empty|not empty)\\b",
+          "event\\s*!=\\s*null\\s*&&\\s*!event\\.isEmpty"
+        ],
+        "sources": [
+          "shop.util.AuditLog.record(String)"
+        ]
+      },
+      {
+        "id": "q26_f2",
+        "description": "count returns the number of stored events.",
+        "patterns": [
+          "\\bcount\\b.{0,100}\\b(size|number|length)\\b",
+          "events\\.size\\s*\\("
+        ],
+        "sources": [
+          "shop.util.AuditLog.count()"
+        ]
+      },
+      {
+        "id": "q26_f3",
+        "description": "lastEvent returns the last event or NO_EVENTS when empty.",
+        "patterns": [
+          "\\blastEvent\\b.{0,100}\\b(final|last|latest)\\b.{0,100}\\bNO_EVENTS\\b"
+        ],
+        "sources": [
+          "shop.util.AuditLog.lastEvent()"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Where do stock quantities get read at the service and storage layers?",
+    "category": "ambiguous",
+    "expected": [
+      "shop.service.InventoryService.available(String)",
+      "shop.repository.StockRepository.quantity(String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "InventoryService.available delegates to stock.quantity(sku). StockRepository.quantity reads quantities and defaults an unseen SKU to 20.",
+    "facts": [
+      {
+        "id": "q27_f1",
+        "description": "available delegates to stock.quantity.",
+        "patterns": [
+          "\\bavailable\\b.{0,100}\\b(?:stock\\.)?quantity\\s*\\(",
+          "\\bavailable\\b.{0,100}\\bstock\\.quantity\\b"
+        ],
+        "sources": [
+          "shop.service.InventoryService.available(String)"
+        ]
+      },
+      {
+        "id": "q27_f2",
+        "description": "Repository quantity defaults unseen SKUs to 20.",
+        "patterns": [
+          "\\b(unseen|unknown|default|absent|missing)\\b.{0,90}\\b(20|twenty)\\b",
+          "getOrDefault\\s*\\(\\s*sku\\s*,\\s*20\\s*\\)"
+        ],
+        "sources": [
+          "shop.repository.StockRepository.quantity(String)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Show the cancellation coordinator and its refund, restocking, status update and audit operations.",
+    "category": "multi_method",
+    "expected": [
+      "shop.service.OrderService.cancel(String,String,int,int)",
+      "shop.service.PaymentService.refund(int)",
+      "shop.service.InventoryService.release(String,int)",
+      "shop.repository.OrderRepository.updateStatus(String,String)",
+      "shop.util.AuditLog.record(String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "OrderService.cancel requires PLACED status and a successful refund; otherwise it returns false. It then releases stock, updates status to CANCELLED, records a CANCELLED audit event and returns true.",
+    "facts": [
+      {
+        "id": "q28_f1",
+        "description": "Cancellation requires PLACED status and a successful refund.",
+        "patterns": [
+          "\\b(requir\\w*|only|check\\w*)\\b.{0,100}\\bPLACED\\b.{0,120}\\brefund\\b"
+        ],
+        "sources": [
+          "shop.service.OrderService.cancel(String,String,int,int)"
+        ]
+      },
+      {
+        "id": "q28_f2",
+        "description": "Cancellation releases inventory after refund succeeds.",
+        "patterns": [
+          "\\brefund\\b.{0,110}\\b(release\\w*|restock\\w*|restor\\w*)\\b",
+          "\\b(release\\w*|restock\\w*)\\b.{0,100}\\brefund\\b"
+        ],
+        "sources": [
+          "shop.service.OrderService.cancel(String,String,int,int)"
+        ]
+      },
+      {
+        "id": "q28_f3",
+        "description": "Cancellation updates order status and records CANCELLED.",
+        "patterns": [
+          "\\b(updat\\w*|set\\w*|mark\\w*)\\b.{0,100}\\bCANCELLED\\b.{0,100}\\b(record\\w*|audit\\w*)\\b"
+        ],
+        "sources": [
+          "shop.service.OrderService.cancel(String,String,int,int)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Show checkout together with the inventory reservation, price calculation, payment charge and dispatch entry points.",
+    "category": "multi_method",
+    "expected": [
+      "shop.service.OrderService.checkout(String,int,int,String,String)",
+      "shop.service.InventoryService.reserve(String,int)",
+      "shop.util.PriceCalculator.total(int,int,String)",
+      "shop.service.PaymentService.charge(int)",
+      "shop.service.ShippingService.dispatch(String,String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "checkout reserves stock, computes merchandise using PriceCalculator.total, adds shipping.quote and calls payments.charge. Failed payment releases stock and returns PAYMENT_FAILED. Success saves the order, invokes shipping.dispatch and records PLACED.",
+    "facts": [
+      {
+        "id": "q29_f1",
+        "description": "Checkout reserves inventory before computing merchandise total.",
+        "patterns": [
+          "\\breserv\\w*\\b.{0,120}\\b(PriceCalculator\\.total|merchandise|comput\\w*)\\b"
+        ],
+        "sources": [
+          "shop.service.OrderService.checkout(String,int,int,String,String)"
+        ]
+      },
+      {
+        "id": "q29_f2",
+        "description": "Checkout charges merchandise plus shipping.",
+        "patterns": [
+          "\\b(merchandise|total)\\b.{0,100}\\b(plus|adds?|and)\\b.{0,60}\\b(shipping|delivery|shipping\\.quote)\\b.{0,100}\\bcharg\\w*\\b"
+        ],
+        "sources": [
+          "shop.service.OrderService.checkout(String,int,int,String,String)"
+        ]
+      },
+      {
+        "id": "q29_f3",
+        "description": "Successful checkout saves and dispatches the order.",
+        "patterns": [
+          "\\bsav\\w*\\b.{0,100}\\b(?:shipping\\.)?dispatch\\w*\\b"
+        ],
+        "sources": [
+          "shop.service.OrderService.checkout(String,int,int,String,String)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Compare payment acceptance, refund validation and the net charged balance accessor.",
+    "category": "multi_method",
+    "expected": [
+      "shop.service.PaymentService.charge(int)",
+      "shop.service.PaymentService.refund(int)",
+      "shop.service.PaymentService.totalCharged()"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "charge accepts amounts from 1 through 100000 cents inclusive and adds them to chargedCents. refund accepts positive amounts no greater than chargedCents and subtracts them. totalCharged returns the current net balance.",
+    "facts": [
+      {
+        "id": "q30_f1",
+        "description": "charge accepts 1 through 100000 cents inclusive.",
+        "patterns": [
+          "\\bcharge\\b.{0,100}\\b1\\b.{0,50}\\b100,?000\\b",
+          "amountCents\\s*<=\\s*0\\s*\\|\\|\\s*amountCents\\s*>\\s*100000"
+        ],
+        "sources": [
+          "shop.service.PaymentService.charge(int)"
+        ]
+      },
+      {
+        "id": "q30_f2",
+        "description": "refund accepts positive amounts no greater than the balance and subtracts them.",
+        "patterns": [
+          "\\brefund\\b.{0,110}\\bpositive\\b.{0,100}\\b(no greater|not exceed\\w*|up to|<=)\\b.{0,80}\\b(chargedCents|balance)\\b"
+        ],
+        "sources": [
+          "shop.service.PaymentService.refund(int)"
+        ]
+      },
+      {
+        "id": "q30_f3",
+        "description": "totalCharged returns the net balance.",
+        "patterns": [
+          "\\btotalCharged\\b.{0,100}\\b(?:net|current)\\s+(?:charged\\s+)?balance\\b",
+          "\\btotalCharged\\b.{0,100}\\bchargedCents\\b"
+        ],
+        "sources": [
+          "shop.service.PaymentService.totalCharged()"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Show how shipping fees, dispatch codes and tracking lookups are implemented.",
+    "category": "multi_method",
+    "expected": [
+      "shop.service.ShippingService.quote(String)",
+      "shop.service.ShippingService.dispatch(String,String)",
+      "shop.service.ShippingService.tracking(String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "quote returns 500 cents for LOCAL and 1500 otherwise. dispatch stores and returns SHIP-<zone>-<orderId>. tracking retrieves the code by order ID or returns NOT_DISPATCHED.",
+    "facts": [
+      {
+        "id": "q31_f1",
+        "description": "quote chooses 500 for LOCAL and 1500 otherwise.",
+        "patterns": [
+          "\\bLOCAL\\b.{0,60}\\b500\\b.{0,80}\\b1500\\b",
+          "\\b500\\b.{0,60}\\bLOCAL\\b.{0,80}\\b1500\\b"
+        ],
+        "sources": [
+          "shop.service.ShippingService.quote(String)"
+        ]
+      },
+      {
+        "id": "q31_f2",
+        "description": "dispatch stores and returns a code containing SHIP-, zone and order ID.",
+        "patterns": [
+          "\\bdispatch\\b.{0,100}\\b(stor\\w*|put\\w*)\\b.{0,100}SHIP-.{0,60}(?:zone|orderId)",
+          "\\bdispatch\\b.{0,100}SHIP-.{0,60}zone.{0,60}orderId"
+        ],
+        "sources": [
+          "shop.service.ShippingService.dispatch(String,String)"
+        ]
+      },
+      {
+        "id": "q31_f3",
+        "description": "tracking defaults to NOT_DISPATCHED.",
+        "patterns": [
+          "\\btracking\\b.{0,110}\\bNOT_DISPATCHED\\b"
+        ],
+        "sources": [
+          "shop.service.ShippingService.tracking(String)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Compare creating an order record, reading its status and changing its status.",
+    "category": "multi_method",
+    "expected": [
+      "shop.repository.OrderRepository.save(String,int,int)",
+      "shop.repository.OrderRepository.status(String)",
+      "shop.repository.OrderRepository.updateStatus(String,String)"
+    ],
+    "expect_insufficient": false,
+    "reference_answer": "save generates ORD- IDs starting at 1, stores sku:quantity:paidCents details and initializes PLACED status. status returns the stored value or NOT_FOUND. updateStatus returns false for an unknown ID; otherwise it replaces the status and returns true.",
+    "facts": [
+      {
+        "id": "q32_f1",
+        "description": "save generates ORD- IDs and initializes PLACED status.",
+        "patterns": [
+          "\\bsave\\b.{0,110}ORD-.{0,140}\\bPLACED\\b"
+        ],
+        "sources": [
+          "shop.repository.OrderRepository.save(String,int,int)"
+        ]
+      },
+      {
+        "id": "q32_f2",
+        "description": "status defaults to NOT_FOUND.",
+        "patterns": [
+          "\\bstatus\\b.{0,100}\\bNOT_FOUND\\b"
+        ],
+        "sources": [
+          "shop.repository.OrderRepository.status(String)"
+        ]
+      },
+      {
+        "id": "q32_f3",
+        "description": "updateStatus rejects unknown IDs and replaces existing statuses.",
+        "patterns": [
+          "\\bupdateStatus\\b.{0,100}\\bfalse\\b.{0,100}\\b(unknown|missing)\\b.{0,140}\\b(replace\\w*|updat\\w*|set\\w*)\\b",
+          "\\bupdateStatus\\b.{0,100}\\b(unknown|missing)\\b.{0,100}\\bfalse\\b.{0,140}\\b(replace\\w*|updat\\w*|set\\w*)\\b"
+        ],
+        "sources": [
+          "shop.repository.OrderRepository.updateStatus(String,String)"
+        ]
+      }
+    ]
+  },
+  {
+    "question": "How are OAuth refresh tokens rotated?",
+    "category": "unrelated",
+    "expected": [],
+    "expect_insufficient": true,
+    "reference_answer": "Repository context does not contain evidence sufficient to answer this question.",
+    "facts": []
+  },
+  {
+    "question": "Where is the PostgreSQL migration runner implemented?",
+    "category": "unrelated",
+    "expected": [],
+    "expect_insufficient": true,
+    "reference_answer": "Repository context does not contain evidence sufficient to answer this question.",
+    "facts": []
+  },
+  {
+    "question": "Show the neural embedding generation pipeline.",
+    "category": "unrelated",
+    "expected": [],
+    "expect_insufficient": true,
+    "reference_answer": "Repository context does not contain evidence sufficient to answer this question.",
+    "facts": []
+  },
+  {
+    "question": "How are product images resized and uploaded to cloud storage?",
+    "category": "unrelated",
+    "expected": [],
+    "expect_insufficient": true,
+    "reference_answer": "Repository context does not contain evidence sufficient to answer this question.",
+    "facts": []
+  }
+]

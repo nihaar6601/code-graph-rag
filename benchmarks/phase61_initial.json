@@ -1,0 +1,15 @@
+{
+  "name": "phase61_initial",
+  "description": "Eight representative existing questions; annotations are reused without edits.",
+  "questions": [
+    {"question": "Locate the method that retrieves a shipment tracking code.", "coverage": ["direct_lookup", "no_expansion"]},
+    {"question": "Show only the checkout implementation, without its dependencies.", "coverage": ["implementation_only", "no_expansion"]},
+    {"question": "Which methods does the merchandise total calculator call directly?", "coverage": ["dependencies", "multiple_methods"]},
+    {"question": "What is the direct delegation path for querying order status from the controller through storage?", "coverage": ["cross_file", "multi_step"]},
+    {"question": "How is reserved stock returned when a checkout payment is rejected?", "coverage": ["failure_handling", "cross_file"]},
+    {"question": "How does the coupon SAVE10 change the merchandise total, including rounding?", "coverage": ["behavior", "multiple_methods"]},
+    {"question": "Show the cancellation coordinator and its refund, restocking, status update and audit operations.", "coverage": ["multi_step", "multiple_methods"]},
+    {"question": "Compare payment acceptance, refund validation and the net charged balance accessor.", "coverage": ["multiple_methods", "behavior"]}
+  ],
+  "checkout_annotation_question": "How is reserved stock returned when a checkout payment is rejected?"
+}
